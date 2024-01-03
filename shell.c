@@ -102,7 +102,7 @@ int dash_execute(char **args)
 
 	if(strcmp(args[0], "exit") == 0)
 	{
-		return dash_exit();
+		return dash_exit(args);
 	}
 
 	cpid = fork();
