@@ -2,9 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define TOK_DELIM " \t\r\n";
-#define RED "\033[0;31m";
-#define RESET "\e[0m";
+#define TOK_DELIM " \t\r\n"
+#define RED "\033[0;31m"
+#define RESET "\e[0m"
+#define TK_BUFF_SIZE 1024
 
 char *read_line();
 char **split_line(char *);
