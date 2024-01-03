@@ -2,7 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-char * read_line()
+#define TOK_DELIM " \t\r\n";
+#define RED "\033[0;31m";
+#define RESET "\e[0m";
+
+char *read_line();
+char **split_line(char *);
+int dash_exit(char **);
+int dash_execute(char **);
+
+char *read_line()
 {
 	int buffsize = 1024;
 	int position = 0;
@@ -43,6 +52,80 @@ char * read_line()
 	}
 }
 
+char **split_line(char * line)
+{
+	int buffsize = 1024, position = 0;
+	char * * tokens = malloc(buffsize * sizeof(char *));
+	char * token;
+
+	if(!tokens)
+	{
+		fprintf(stderr, "%sdash: Allocation error%s\n", RED, RESET);
+		exit(EXIT_FAILURE);
+	}
+	token = strtok(line, TOK_DELIM);
+	while(token != NULL)
+	{
+		tokens[position] = token;
+		position++;
+
+		if(position >= buffsize)
+		{
+			buffsize += TK_BUFF_SIZE;
+			tokens = realloc(tokens, buffsize * sizeof(char *));
+
+			if(!tokens)
+			{
+				fprintf(stderr, "%sdash: Allocation error%s\n", RED, RESET);
+				exit(EXIT_FAILURE);
+			}
+		}
+		token = strtok(NULL, TOK_DELIM);
+	}
+
+	tokens[position] = NULL;
+
+	return tokens;
+}
+
+int dash_exit(char **args)
+{
+	return 0;
+}
+
+int dash_execute(char **args)
+{
+	pid_t cpid;
+	int status;
+
+	if(strcmp(args[0], "exit") == 0)
+	{
+		return dash_exit();
+	}
+
+	cpid = fork();
+
+	if(cpid = 0)
+	{
+		if(execvp(args[0], args) < 0)
+		{
+			printf("dash: command not found: %s\n", args[0]);
+		}
+		exit(EXIT_FAILURE);
+	}
+	else if(cpid < 0)
+	{
+		printf(RED "Error forking"
+			RESET "\n");
+	}
+	else
+	{
+		waitpid(cpid, & status, WUNTRACED);
+	}
+
+	return 1;
+}
+
 void loop()
 {
 	char * line;
@@ -54,7 +137,7 @@ void loop()
 		printf("> ");
 		line = read_line();
 		flag = 0;
-		args = split_lines(line);
+		args = split_line(line);
 		status = dash_launch(args);
 		free(line);
 		free(args);
