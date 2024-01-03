@@ -138,7 +138,6 @@ void loop()
 	{
 		printf("> ");
 		line = read_line();
-		flag = 0;
 		args = split_line(line);
 		status = dash_launch(args);
 		free(line);
