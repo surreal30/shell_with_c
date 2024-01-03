@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define TOK_DELIM " \t\r\n"
 #define RED "\033[0;31m"
