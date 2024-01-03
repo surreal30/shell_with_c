@@ -105,7 +105,7 @@ int dash_execute(char **args)
 
 	cpid = fork();
 
-	if(cpid = 0)
+	if(cpid == 0)
 	{
 		if(execvp(args[0], args) < 0)
 		{
@@ -142,4 +142,9 @@ void loop()
 		free(line);
 		free(args);
 	} while (status);
+}
+
+int main() {
+	loop();
+	return 0;
 }
